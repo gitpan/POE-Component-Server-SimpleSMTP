@@ -1,4 +1,15 @@
 ========================
+2007-03-19 12:10:58 0.96
+========================
+
+  2007-03-19 10:26:30 (r11) by bingos
+  tools/svn-log.perl M; Makefile.PL M;
+  lib/POE/Component/Server/SimpleSMTP.pm M
+
+    Improved mail queue. Drop messages with 5xx send errors. Implemented
+    4 day timeout on resends. 
+
+========================
 2007-03-15 16:56:30 0.95
 ========================
 
