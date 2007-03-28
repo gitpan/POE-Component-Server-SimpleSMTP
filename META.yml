@@ -21,4 +21,4 @@ requires:
   POE::Component::Client::SMTP: 0.13
   POE::Component::Pluggable: 0.03
   Socket: 0
-version: 0.99
+version: 1.00
