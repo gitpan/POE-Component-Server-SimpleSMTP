@@ -12,6 +12,7 @@ no_index:
     - inc
     - t
 requires: 
+  Carp: 0
   Email::Address: 1.886
   Email::MessageID: 1.35
   Email::Simple: 1.998
@@ -21,4 +22,5 @@ requires:
   POE::Component::Client::SMTP: 0.13
   POE::Component::Pluggable: 0.03
   Socket: 0
-version: 1.00
+  Storable: 0
+version: 1.01
