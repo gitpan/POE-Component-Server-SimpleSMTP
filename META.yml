@@ -20,8 +20,8 @@ requires:
   Email::Simple::Creator: 1.41
   POE: 0.38
   POE::Component::Client::DNS: 0.99
-  POE::Component::Client::SMTP: 0.13
+  POE::Component::Client::SMTP: 0.18
   POE::Component::Pluggable: 0.03
   Socket: 0
   Storable: 0
-version: 1.06
+version: 1.07
