@@ -24,4 +24,4 @@ requires:
   POE::Component::Pluggable: 0.03
   Socket: 0
   Storable: 0
-version: 1.07
+version: 1.08
