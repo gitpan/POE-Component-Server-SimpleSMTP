@@ -30,7 +30,7 @@ my %data = (
 	],
 );
 
-plan tests => 16;
+plan tests => 17;
 
 POE::Session->create(
   package_states => [
@@ -143,6 +143,7 @@ sub _local_recipient {
   return unless $email;
   my @messageids = $email->header("Message-ID");
   ok( scalar @messageids == 1, "Only one Message-ID header");
+  ok( $_[ARG0]->{subject} eq 'Message in a bottle', 'There is a subject item' );
   diag("@messageids\n");
   return;
 }
