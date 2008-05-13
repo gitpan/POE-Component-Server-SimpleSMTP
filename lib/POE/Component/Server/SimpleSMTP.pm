@@ -3,7 +3,7 @@ package POE::Component::Server::SimpleSMTP;
 use strict;
 use warnings;
 use POSIX;
-use POE qw(Component::Client::SMTP Component::Client::DNS Wheel::SocketFactory Wheel::ReadWrite Filter::Line);
+use POE qw(Component::Client::SMTP Component::Client::DNS Wheel::SocketFactory Wheel::ReadWrite Filter::Transparent::SMTP);
 use base qw(POE::Component::Pluggable);
 use POE::Component::Pluggable::Constants qw(:ALL);
 use Email::MessageID;
@@ -14,7 +14,7 @@ use Socket;
 use Storable;
 use vars qw($VERSION);
 
-$VERSION = '1.14';
+$VERSION = '1.16';
 
 sub spawn {
   my $package = shift;
@@ -186,7 +186,11 @@ sub _start {
     $kernel->post( $sender, 'smtpd_registered', $self );
   }
 
-  $self->{filter} = POE::Filter::Line->new( Literal => "\015\012" );
+  #$self->{filter} = POE::Filter::Line->new( Literal => "\015\012" );
+  $self->{filter} = POE::Filter::Transparent::SMTP->new(
+    InputLiteral => qq{\015\012},
+    OutputLiteral => qq{\015\012},
+  );
 
   $self->{cmds} = [ qw(ehlo helo mail rcpt data noop vrfy rset expn help quit) ];
 
@@ -1246,13 +1250,19 @@ Design a better message queue so that messages are stored on disk.
 
 =head1 KUDOS
 
-George Nistoric for L<POE::Component::Client::SMTP>
+George Nistoric for L<POE::Component::Client::SMTP> and L<POE::Filter::Transparent::SMTP>.
 
 Rocco Caputo for L<POE::Component::Client::DNS>
 
 =head1 AUTHOR
 
 Chris C<BinGOs> Williams <chris@bingosnet.co.uk>
+
+=head1 LICENSE
+
+Copyright C<(c)> Chris Williams.
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

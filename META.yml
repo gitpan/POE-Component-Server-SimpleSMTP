@@ -5,7 +5,7 @@ author:
 build_requires:
   Test::More: 0.47
 distribution_type: module
-generated_by: 'Module::Install version 0.71'
+generated_by: 'Module::Install version 0.72'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.3.html
@@ -21,15 +21,16 @@ requires:
   Email::MessageID: 1.35
   Email::Simple: 1.998
   Email::Simple::Creator: 1.41
-  POE: 1
+  POE: 1.0002
   POE::Component::Client::DNS: 0.99
   POE::Component::Client::SMTP: 0.18
   POE::Component::Pluggable: 0.03
   POE::Filter::Line: 0
+  POE::Filter::Transparent::SMTP: 0
   POE::Wheel::ReadWrite: 0
   POE::Wheel::SocketFactory: 0
   POSIX: 0
   Socket: 0
   Storable: 0
   perl: 5.6.0
-version: 1.14
+version: 1.16
