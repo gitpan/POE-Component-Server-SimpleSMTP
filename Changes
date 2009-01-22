@@ -1,4 +1,14 @@
 ========================
+2009-01-22 14:20:30 1.42
+========================
+
+  2009-01-22 14:10:45 (r73) by bingos
+  Changes M; lib/POE/Component/Server/SimpleSMTP.pm M
+
+    Wrap the lookup calls on $socket in evals, occasionally the trying to
+    obtain the sockaddr and sockport fails for no apparent reason
+
+========================
 2009-01-05 17:10:49 1.40
 ========================
 
