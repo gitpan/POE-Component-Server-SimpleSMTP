@@ -1,4 +1,20 @@
 ==============================
+2010-11-23 01:23:37 +0000 1.46
+==============================
+
+  commit 5d02e8a6a2efe9e908be316e2dd725e83ec6b168
+  Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+  Date:   Tue Nov 23 01:23:37 2010 +0000
+  
+    Add enqueue() method for adding arbitary email to the queue.
+
+  commit 5092eb9e1c03dba3cf01689207fb124ab435450c
+  Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+  Date:   Mon Nov 22 21:50:13 2010 +0000
+  
+    Convert dist to dzil 
+
+==============================
 2009-10-31 14:13:09 +0000 1.44
 ==============================
 
@@ -349,6 +365,6 @@
     Improved mail queue. Drop messages with 5xx send errors. Implemented
     4 day timeout on resends. 
 
-==============
-End of Excerpt
-==============
+====================================
+End of changes in the last 1825 days
+====================================

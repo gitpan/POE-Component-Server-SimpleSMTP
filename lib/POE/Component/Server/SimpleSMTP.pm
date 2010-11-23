@@ -1,4 +1,9 @@
 package POE::Component::Server::SimpleSMTP;
+BEGIN {
+  $POE::Component::Server::SimpleSMTP::VERSION = '1.46';
+}
+
+#ABSTRACT: A simple to use POE SMTP Server.
 
 use strict;
 use warnings;
@@ -13,9 +18,6 @@ use Email::Address;
 use Carp;
 use Socket;
 use Storable;
-use vars qw($VERSION);
-
-$VERSION = '1.44';
 
 sub spawn {
   my $package = shift;
@@ -32,7 +34,7 @@ sub spawn {
   $opts{origin} = 0 unless $opts{origin};
   $opts{maxrelay} = 5 unless $opts{maxrelay};
   $opts{relay_auth} = 'PLAIN' if $opts{relay_auth};
-  $opts{version} = join('-', __PACKAGE__, $VERSION ) unless $opts{version};
+  $opts{version} = join('-', __PACKAGE__, $POE::Component::Server::SimpleSMTP::VERSION ) unless $opts{version};
   my $self = bless \%opts, $package;
   $self->_pluggable_init( prefix => 'smtpd_', types => [ 'SMTPD', 'SMTPC' ], debug => 1 );
   $self->{session_id} = POE::Session->create(
@@ -822,7 +824,7 @@ sub SMTPD_message {
   my $uid = $msg_id->user();
   unshift @{ $buf }, "Message-ID: " . $msg_id->in_brackets()
 	  unless grep { /^Message-ID:/i } @{ $buf };
-  unshift @{ $buf }, "Received: from Unknown [" . $self->{clients}->{ $id }->{peeraddr} . "] by " . $self->{hostname} . " " . __PACKAGE__ . "-$VERSION with SMTP id $uid; " . strftime("%a, %d %b %Y %H:%M:%S %z", localtime)
+  unshift @{ $buf }, "Received: from Unknown [" . $self->{clients}->{ $id }->{peeraddr} . "] by " . $self->{hostname} . " " . $self->{version} . " with SMTP id $uid; " . strftime("%a, %d %b %Y %H:%M:%S %z", localtime)
     unless $self->{origin};
   $self->send_to_client( $id, "250 $uid Message accepted for delivery" );
   my $email = Email::Simple->new( join "\r\n", @{ $buf } );
@@ -835,12 +837,43 @@ sub SMTPD_message {
   return PLUGIN_EAT_ALL;
 }
 
+sub enqueue {
+  my $self = shift;
+  my %item;
+  if ( ref $_[0] and ref $_[0] eq 'HASH' ) {
+    %item = %{ $_[0] };
+  }
+  elsif ( ref $_[0] and ref $_[0] eq 'ARRAY' ) {
+    %item = @{ $_[0] };
+  }
+  else {
+    %item = @_;
+  }
+  $item{lc $_} = delete $item{$_} for keys %item;
+  return unless $item{from};
+  return unless $item{msg};
+  return unless $item{rcpt} and ref $item{rcpt} eq 'ARRAY' and scalar @{ $item{rcpt} };
+  $item{ts} = time() unless $item{ts} and $item{ts} =~ /^\d+$/;
+  $item{uid} = Email::MessageID->new( host => $self->{hostname} )->user() unless $item{uid};
+  $item{subject} = '' unless $item{subject};
+  push @{ $self->{_mail_queue} }, \%item;
+  $poe_kernel->post( $self->{session_id}, '_process_queue' );
+  return 1;
+}
+
 1;
+
+
 __END__
+=pod
 
 =head1 NAME
 
 POE::Component::Server::SimpleSMTP - A simple to use POE SMTP Server.
+
+=head1 VERSION
+
+version 1.46
 
 =head1 SYNOPSIS
 
@@ -872,6 +905,18 @@ mail itself by querying DNS MX records.
 
 One may also disable simple functionality and implement one's own SMTP handling 
 and mail queuing. This can be done via a POE state interface or via L<POE::Component::Pluggable> plugins.
+
+=for Pod::Coverage   SMTPD_cmd_data
+  SMTPD_cmd_ehlo
+  SMTPD_cmd_expn
+  SMTPD_cmd_helo
+  SMTPD_cmd_mail
+  SMTPD_cmd_noop
+  SMTPD_cmd_rcpt
+  SMTPD_cmd_rset
+  SMTPD_cmd_vrfy
+  SMTPD_connection
+  SMTPD_message
 
 =head1 CONSTRUCTOR
 
@@ -997,6 +1042,17 @@ Takes one mandatory parameter a msg_id to remove from the mail queue.
 
 Takes no arguments, start the socket listener if it has stopped for any reason. Will fail if the listener is
 already erm listening.
+
+=item C<enqueue>
+
+Takes one argument, a C<hashref> with the following keys and values. Enqueues the item and requests that the
+mail queue be processed. Returns undef on failure or 1 on success.
+
+  'from', the email address of the sender (required);
+  'rcpt', an arrayref of the email recipients (required);
+  'msg', string representation of the email headers and body (required);
+  'ts', the unix time representation of the time the email was received (default is now);
+  'uid', the Message-ID (default is to generate one for you);
 
 =back
 
@@ -1184,7 +1240,7 @@ with the following line:
 
 The return values have the following significance:
 
-=over 
+=over
 
 =item C<SMTPD_EAT_NONE>
 
@@ -1370,16 +1426,6 @@ George Nistoric for L<POE::Component::Client::SMTP> and L<POE::Filter::Transpare
 
 Rocco Caputo for L<POE::Component::Client::DNS>
 
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams <chris@bingosnet.co.uk>
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams.
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
-
 =head1 SEE ALSO
 
 L<POE::Component::Pluggable>
@@ -1389,3 +1435,17 @@ L<POE::Component::Client::DNS>
 L<POE::Component::Client::SMTP>
 
 RFC 2821 L<http://www.faqs.org/rfcs/rfc2821.html>
+
+=head1 AUTHOR
+
+Chris Williams <chris@bingosnet.co.uk>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2010 by Chris Williams.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
+
