@@ -1,6 +1,6 @@
 package POE::Component::Server::SimpleSMTP::Constants;
 BEGIN {
-  $POE::Component::Server::SimpleSMTP::Constants::VERSION = '1.46';
+  $POE::Component::Server::SimpleSMTP::Constants::VERSION = '1.48';
 }
 
 #ABSTRACT: importable constants for POE::Component::Server::SimpleSMTP plugins.
@@ -31,7 +31,7 @@ POE::Component::Server::SimpleSMTP::Constants - importable constants for POE::Co
 
 =head1 VERSION
 
-version 1.46
+version 1.48
 
 =head1 SYNOPSIS
 

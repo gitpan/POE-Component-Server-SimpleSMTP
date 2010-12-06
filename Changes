@@ -1,4 +1,15 @@
 ==============================
+2010-12-06 14:08:23 +0000 1.48
+==============================
+
+  commit aaec708a241f872bb99a6a078b38e24550f3f67e
+  Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+  Date:   Mon Dec 6 14:08:23 2010 +0000
+  
+    Added sender verification code for testing whether the mail senders
+    domain exists in DNS or not 
+
+==============================
 2010-11-23 01:23:37 +0000 1.46
 ==============================
 

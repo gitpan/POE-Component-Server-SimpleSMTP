@@ -25,7 +25,7 @@ my %WriteMakefileArgs = (
     'Email::MessageID' => '1.4',
     'Email::Simple' => '1.998',
     'Email::Simple::Creator' => '1.41',
-    'POE' => '1.0002',
+    'POE' => '1.294',
     'POE::Component::Client::DNS' => '0.99',
     'POE::Component::Client::DNSBL' => '0.08',
     'POE::Component::Client::SMTP' => '0.18',
@@ -38,7 +38,7 @@ my %WriteMakefileArgs = (
     'Socket' => '0',
     'Storable' => '0'
   },
-  'VERSION' => '1.46',
+  'VERSION' => '1.48',
   'test' => {
     'TESTS' => 't/*.t'
   }

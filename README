@@ -2,7 +2,7 @@ NAME
     POE::Component::Server::SimpleSMTP - A simple to use POE SMTP Server.
 
 VERSION
-    version 1.46
+    version 1.48
 
 SYNOPSIS
       # A simple SMTP Server 
@@ -77,12 +77,20 @@ CONSTRUCTOR
         You may also enable DNSBL lookups of connecting clients with the
         following options:
 
-          'dnsbl_enable', set to a true value to enable DNSBL suuport;
+          'dnsbl_enable', set to a true value to enable DNSBL support;
           'dnsbl', set to a DNSBL to query, default is zen.spamhaus.org;
 
         DNSBL support uses POE::Component::Client::DNSBL to make blacklist
         queries for each connecting client. If a client is found in the
         blacklist, any further interaction with the client is denied.
+
+        You may also enable sender verification, this does a simple "MX" DNS
+        lookup on the domain of the email sender. If there is no "MX" domain
+        record (ie. an "NXDOMAIN") then a 550 is issued. In the case of a
+        "SERVFAIL", a 451 is issued. In both cases the email transaction is
+        cancelled.
+
+          'sender_verify', set to a true value to enable sender verification;
 
         See OUTPUT EVENTS below for information on what a handler event
         contains.
@@ -256,6 +264,13 @@ OUTPUT EVENTS
             'reason', if an address is blacklisted, this may contain the reason;
             'error', if something goes wrong with the DNS lookup the error string will be contained here;
             'dnsbl', the DNSBL that was used for this request;
+
+    "smtpd_fverify"
+        Generated when a sender verification fails, in "simple" mode.
+
+          ARG0 will be the client ID;
+          ARG1 will be the response sent to the client;
+          ARG2 will be the DNS error reason;
 
     In "simple" mode these events will be generated:
 
