@@ -38,7 +38,7 @@ my %WriteMakefileArgs = (
     'Socket' => '0',
     'Storable' => '0'
   },
-  'VERSION' => '1.48',
+  'VERSION' => '1.50',
   'test' => {
     'TESTS' => 't/*.t'
   }

@@ -1,6 +1,6 @@
 package POE::Component::Server::SimpleSMTP;
 BEGIN {
-  $POE::Component::Server::SimpleSMTP::VERSION = '1.48';
+  $POE::Component::Server::SimpleSMTP::VERSION = '1.50';
 }
 
 #ABSTRACT: A simple to use POE SMTP Server.
@@ -686,11 +686,9 @@ sub _dnsbl {
 
 sub _sender_verify {
   my ($kernel,$self,$data) = @_[KERNEL,OBJECT,ARG0];
+  return if $data->{error} and $data->{error} eq 'NOERROR';
   my $id = delete $data->{context};
-  if ( $data->{error} ) {
-    $self->{clients}->{ $id }->{fverify} = $data->{error};
-    return;
-  }
+  $self->{clients}->{ $id }->{fverify} = $data->{error};
   return;
 }
 
@@ -921,7 +919,7 @@ POE::Component::Server::SimpleSMTP - A simple to use POE SMTP Server.
 
 =head1 VERSION
 
-version 1.48
+version 1.50
 
 =head1 SYNOPSIS
 

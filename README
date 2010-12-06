@@ -2,7 +2,7 @@ NAME
     POE::Component::Server::SimpleSMTP - A simple to use POE SMTP Server.
 
 VERSION
-    version 1.48
+    version 1.50
 
 SYNOPSIS
       # A simple SMTP Server 
